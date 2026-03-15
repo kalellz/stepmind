@@ -3,7 +3,6 @@
 import { Mic, Pause, Play, Square } from "lucide-react"
 import { useEffect, useState } from "react"
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
-import Header from "../components/Header"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 
@@ -41,7 +40,6 @@ export default function Page() {
 
   return (
     <div className="flex h-full flex-col items-center p-6">
-      <Header />
       <main className="flex h-full w-full flex-col items-center justify-center">
         <h1 className="text-2xl font-bold">O que você quer fazer hoje?</h1>
         <p className="text-sm text-zinc-500">Descreva seu objetivo e a gente fragmenta em passos simples pra você.</p>

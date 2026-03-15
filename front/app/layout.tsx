@@ -4,6 +4,7 @@ import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import Header from "../components/Header"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -28,9 +29,12 @@ export default function RootLayout({
         inter.variable
       )}
     >
-      <body className="w-dvw h-dvh">
+      <body className="h-dvh w-dvw overflow-x-hidden overflow-y-hidden">
         <ThemeProvider>
-          <TooltipProvider>{children}</TooltipProvider>
+          <TooltipProvider>
+            <Header />
+            {children}
+          </TooltipProvider>
         </ThemeProvider>
       </body>
     </html>
