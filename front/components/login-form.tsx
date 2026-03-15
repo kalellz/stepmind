@@ -65,7 +65,7 @@ export function LoginForm({
                   <FieldLabel htmlFor="password">Password</FieldLabel>
                   <a
                     href="#"
-                    className="ml-auto text-sm underline-offset-4 hover:underline"
+                    className="ml-auto text-xs font-light underline-offset-4 hover:underline"
                   >
                     Forgot your password?
                   </a>
@@ -90,7 +90,7 @@ export function LoginForm({
               <Field>
                 <Button type="submit" onClick={handleLogin}>Login</Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Ainda não tem uma conta <a href="/signup">Crie uma aqui.</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
@@ -98,8 +98,8 @@ export function LoginForm({
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
-        and <a href="#">Privacy Policy</a>.
+        Ao clicar em continuar, você concorda com nossos <a href="#">Termos de Serviço</a>{" "}
+        e nossa  <a href="#">Política de Privacidade</a>.
       </FieldDescription>
     </div>
   )
