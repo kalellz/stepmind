@@ -8,6 +8,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { usePathname, useRouter } from "next/navigation"
+import { authClient } from "@/lib/auth"
 
 type HeaderAction = {
   label: string
@@ -17,8 +19,9 @@ type HeaderAction = {
 
 export default function Header() {
   const { resolvedTheme, setTheme } = useTheme()
-  const [auth] = useState(false)
-
+  const isLoginPage = usePathname().includes("/login")
+  const isSignUpPage = usePathname().includes("/signup")
+  const auth = !isLoginPage && !isSignUpPage
   const toggleTheme = () => {
     setTheme(resolvedTheme === "dark" ? "light" : "dark")
   }
@@ -28,14 +31,20 @@ export default function Header() {
     icon: resolvedTheme === "light" ? <Moon /> : <Sun />,
     onClick: toggleTheme,
   }
+  const router = useRouter()
+  const handleSignOut = async () => {
 
+    await authClient.signOut().then(() => router.push("/login"))
+  }
   const actions: HeaderAction[] = auth
     ? [
-        { label: "Calendário", icon: <Calendar /> },
-        { label: "Histórico", icon: <History /> },
-        themeAction,
-        { label: "Sair", icon: <LogOut /> },
-      ]
+      { label: "Calendário", icon: <Calendar /> },
+      { label: "Histórico", icon: <History /> },
+      themeAction,
+      {
+        label: "Sair", icon: <LogOut />, onClick: handleSignOut
+      },
+    ]
     : [themeAction]
 
   return (
