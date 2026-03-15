@@ -14,7 +14,6 @@ import { authClient } from "@/lib/auth"
 type HeaderAction = {
   label: string
   icon: ReactNode
-  onClick?: () => void
 }
 
 export default function Header() {
@@ -38,8 +37,8 @@ export default function Header() {
   }
   const actions: HeaderAction[] = auth
     ? [
-      { label: "Calendário", icon: <Calendar /> },
-      { label: "Histórico", icon: <History /> },
+      { label: "Calendário", icon: <Calendar />, onClick: () => router.push("/calendar") },
+      { label: "Histórico", icon: <History />, onClick: () => router.push("/history") },
       themeAction,
       {
         label: "Sair", icon: <LogOut />, onClick: handleSignOut
