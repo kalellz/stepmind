@@ -19,12 +19,24 @@ import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./ui/input-group"
 import { useState } from "react"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
+import axios from "axios"
+import { authClient } from "@/lib/auth"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [isVisible, setIsVisible] = useState<boolean>(true)
+  const [email, setEmail] = useState<string>("")
+  const [password, setPassword] = useState<string>("")
+  async function handleLogin() {
+    const t = await authClient.signIn.email({
+      email: email,
+      password: password,
+      rememberMe: true
+    })
+    console.log(t)
+  }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -42,6 +54,8 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="jonhdoe@email.com"
                   required
                 />
@@ -59,6 +73,8 @@ export function LoginForm({
                 <InputGroup>
                   <InputGroupInput
                     type={isVisible ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     placeholder="********"
                   />
                   <InputGroupAddon align={"inline-end"}>
@@ -72,7 +88,7 @@ export function LoginForm({
                 </InputGroup>
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button type="submit" onClick={handleLogin}>Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="#">Sign up</a>
                 </FieldDescription>
