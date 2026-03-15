@@ -37,6 +37,7 @@ export function LoginForm({
       password: password,
       rememberMe: true
     }).then(() => {
+      console.log("s")
       router.push("/")
     })
 
@@ -92,7 +93,7 @@ export function LoginForm({
                 </InputGroup>
               </Field>
               <Field>
-                <Button type="submit" onClick={handleLogin}>Login</Button>
+                <Button onClick={handleLogin}>Login</Button>
                 <FieldDescription className="text-center">
                   Ainda não tem uma conta <a href="/signup">Crie uma aqui.</a>
                 </FieldDescription>
