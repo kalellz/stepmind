@@ -28,6 +28,12 @@ export default function CalendarPage() {
     .filter((d): d is Date => d !== null)
 
   const [date, setDate] = useState<Date | undefined>(new Date())
+  const [openDateModal, setOpenDateModal] = useState(false)
+
+  const handleSelect = (d: Date | undefined) => {
+    setDate(d)
+    if (d) setOpenDateModal(true)
+  }
 
   return (
     <PageContainer>
@@ -35,12 +41,36 @@ export default function CalendarPage() {
         <Calendar
           mode="single"
           selected={date}
-          onSelect={setDate}
+          onSelect={handleSelect}
           checkedDates={checkedDates}
           className="w-80 rounded-lg border"
           captionLayout="dropdown"
         />
       </div>
+
+      {openDateModal && date ? (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+          <div className="w-full max-w-md rounded-xl bg-background p-6 shadow-lg">
+            <div className="flex items-start justify-between gap-4">
+              <h1 className="text-xl font-semibold">Data selecionada</h1>
+              <button
+                onClick={() => setOpenDateModal(false)}
+                className="rounded-md bg-muted px-3 py-1 text-sm font-medium hover:bg-muted/80"
+              >
+                Fechar
+              </button>
+            </div>
+
+            <p className="mt-4 text-lg">
+              {date.toLocaleDateString(undefined, {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+            </p>
+          </div>
+        </div>
+      ) : null}
     </PageContainer>
   )
 }
