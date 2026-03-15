@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -14,11 +15,34 @@ import {
     FieldLabel,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { useState } from "react"
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./ui/input-group"
+import { EyeIcon, EyeOffIcon } from "lucide-react"
+import { authClient } from "@/lib/auth"
 
 export function SignupForm({
     className,
     ...props
 }: React.ComponentProps<"div">) {
+    const [name, setName] = useState<string>("")
+    const [isVisible, setIsVisible] = useState<boolean>(true)
+    const [email, setEmail] = useState<string>("")
+    const [password, setPassword] = useState<string>("")
+    const [confirmPassword, setConfirmPassword] = useState<string>("")
+    async function handleSignUp() {
+        if (password == confirmPassword && name != "" && email != "" && password != "") {
+            await authClient.signUp.email({
+                email: email,
+                password: password,
+                name: name
+            }).catch((e) => console.log(e)).then(() => alert("account created"))
+
+        }
+        if (password != confirmPassword) {
+            alert("password dont match")
+        }
+        return;
+    }
     return (
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
@@ -33,13 +57,21 @@ export function SignupForm({
                         <FieldGroup>
                             <Field>
                                 <FieldLabel htmlFor="name">Nome Completo</FieldLabel>
-                                <Input id="name" type="text" placeholder="John Doe" required />
+                                <Input
+                                    id="name"
+                                    type="text"
+                                    placeholder="John Doe"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    required />
                             </Field>
                             <Field>
                                 <FieldLabel htmlFor="email">Email</FieldLabel>
                                 <Input
                                     id="email"
                                     type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="jonhdoe@email.com"
                                     required
                                 />
@@ -48,13 +80,35 @@ export function SignupForm({
                                 <Field className="grid grid-cols-2 gap-4">
                                     <Field>
                                         <FieldLabel htmlFor="password">Senha</FieldLabel>
-                                        <Input id="password" type="password" required />
+                                        <InputGroup>
+                                            <InputGroupInput
+                                                type={isVisible ? "text" : "password"}
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                placeholder="********"
+                                            />
+                                            <InputGroupAddon align={"inline-end"}>
+                                                <InputGroupButton
+                                                    size={"icon-xs"}
+                                                    onClick={() => setIsVisible(!isVisible)}
+                                                >
+                                                    {isVisible ? <EyeOffIcon /> : <EyeIcon />}
+                                                </InputGroupButton>
+                                            </InputGroupAddon>
+                                        </InputGroup>
                                     </Field>
                                     <Field>
                                         <FieldLabel htmlFor="confirm-password">
                                             Confirmar Senha
                                         </FieldLabel>
-                                        <Input id="confirm-password" type="password" required />
+                                        <InputGroup>
+                                            <InputGroupInput
+                                                type={isVisible ? "text" : "password"}
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                placeholder="********"
+                                            />
+                                        </InputGroup>
                                     </Field>
                                 </Field>
                                 <FieldDescription>
@@ -62,7 +116,7 @@ export function SignupForm({
                                 </FieldDescription>
                             </Field>
                             <Field>
-                                <Button type="submit">Criar conta</Button>
+                                <Button onClick={handleSignUp}>Criar conta</Button>
                                 <FieldDescription className="text-center">
                                     Já tem uma conta? <a href="/login">Entre aqui.</a>
                                 </FieldDescription>

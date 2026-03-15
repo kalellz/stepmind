@@ -21,6 +21,7 @@ import { useState } from "react"
 import { EyeIcon, EyeOffIcon } from "lucide-react"
 import axios from "axios"
 import { authClient } from "@/lib/auth"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({
   className,
@@ -28,14 +29,17 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
   const [isVisible, setIsVisible] = useState<boolean>(true)
   const [email, setEmail] = useState<string>("")
+  const router = useRouter()
   const [password, setPassword] = useState<string>("")
   async function handleLogin() {
-    const t = await authClient.signIn.email({
+    await authClient.signIn.email({
       email: email,
       password: password,
       rememberMe: true
+    }).then(() => {
+      router.push("/")
     })
-    console.log(t)
+
   }
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

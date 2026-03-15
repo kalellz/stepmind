@@ -4,15 +4,17 @@ import { NextRequest } from "next/server";
 
 export default function proxy(req: NextRequest) {
     const sessionCookie = getSessionCookie(req)
-    console.log(sessionCookie)
-    const fakeLogin = false
-    if (!sessionCookie || fakeLogin) {
+    const isLoginPage = req.url.includes("/login")
+    if (!sessionCookie && !isLoginPage) {
         return NextResponse.redirect(new URL('/login', req.url))
+    }
+    if (sessionCookie && isLoginPage) {
+        return NextResponse.redirect(new URL("/", req.url))
     }
     return NextResponse.next()
 }
 
 
 export const config = {
-    matcher: ['/']
+    matcher: ['/', '/login']
 }
