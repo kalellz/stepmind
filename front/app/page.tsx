@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, ArrowRightIcon, AudioLinesIcon, Mic, Pause, Play, PlusIcon, Square } from "lucide-react"
+import { ArrowRightIcon, AudioLinesIcon, Mic, Pause, Play, PlusIcon, Square } from "lucide-react"
 import { useEffect, useState } from "react"
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
 import { Input } from "../components/ui/input"
