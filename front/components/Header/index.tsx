@@ -48,7 +48,7 @@ export default function Header() {
 
   return (
     <header className="flex w-full items-center justify-between border-b px-6 py-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 cursor-pointer hover:opacity-80" onClick={() => router.push("/")}>
         <Sparkles />
         <span className="text-sm font-semibold">StepMind</span>
       </div>
