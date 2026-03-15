@@ -1,23 +1,24 @@
 "use client"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
+  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupButton,
-  InputGroupInput,
-} from "./ui/input-group"
-import { Eye, EyeIcon, EyeOffIcon } from "lucide-react"
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./ui/input-group"
 import { useState } from "react"
+import { EyeIcon, EyeOffIcon } from "lucide-react"
 
 export function LoginForm({
   className,
@@ -26,16 +27,16 @@ export function LoginForm({
   const [isVisible, setIsVisible] = useState<boolean>(true)
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Card className="overflow-hidden p-0">
-        <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8">
+      <Card>
+        <CardHeader className="text-center">
+          <CardTitle className="text-xl">Bem vindo de volta!</CardTitle>
+          <CardDescription>
+            Faça login com sua conta StepMind
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form>
             <FieldGroup>
-              <div className="flex flex-col items-center gap-2 text-center">
-                <h1 className="text-2xl font-bold">Bem vindo de volta</h1>
-                <p className="text-balance text-muted-foreground">
-                  Faça login em sua conta StepMind
-                </p>
-              </div>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
                 <Input
@@ -47,12 +48,12 @@ export function LoginForm({
               </Field>
               <Field>
                 <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Senha</FieldLabel>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>
                   <a
                     href="#"
-                    className="ml-auto text-xs underline-offset-2 hover:underline"
+                    className="ml-auto text-sm underline-offset-4 hover:underline"
                   >
-                    Esqueceu sua senha?
+                    Forgot your password?
                   </a>
                 </div>
                 <InputGroup>
@@ -71,25 +72,18 @@ export function LoginForm({
                 </InputGroup>
               </Field>
               <Field>
-                <Button type="submit">Entrar agora</Button>
+                <Button type="submit">Login</Button>
+                <FieldDescription className="text-center">
+                  Don&apos;t have an account? <a href="#">Sign up</a>
+                </FieldDescription>
               </Field>
             </FieldGroup>
           </form>
-          <div className="relative hidden bg-neutral-950 md:block">
-            <Image
-              width={24}
-              height={24}
-              src="/logo.svg"
-              alt="Image"
-              className="absolute inset-0 h-full w-full object-contain invert filter"
-            />
-          </div>
         </CardContent>
       </Card>
       <FieldDescription className="px-6 text-center">
-        Ao clicar em entrar agora, você concorda com nossos{" "}
-        <a href="#">Termos de serviço</a> e{" "}
-        <a href="#">Políticas de privacidade</a>.
+        By clicking continue, you agree to our <a href="#">Terms of Service</a>{" "}
+        and <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
   )

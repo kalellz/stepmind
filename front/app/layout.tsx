@@ -23,13 +23,13 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-        "antialiased",
+        "antialiased h-dvh w-dvh",
         fontMono.variable,
         "font-sans",
         inter.variable
       )}
     >
-      <body className="h-dvh w-dvw overflow-x-hidden overflow-y-hidden">
+      <body className="flex flex-col h-dvh w-dvw">
         <ThemeProvider>
           <TooltipProvider>
             <Header />
