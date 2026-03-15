@@ -1,42 +1,43 @@
 "use client"
 
-import { Mic, Pause, Play, Square } from "lucide-react"
+import { ArrowRight, ArrowRightIcon, AudioLinesIcon, Mic, Pause, Play, PlusIcon, Square } from "lucide-react"
 import { useEffect, useState } from "react"
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
-import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
+import { ButtonGroup } from "@/components/ui/button-group"
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
 
 export default function Page() {
-  const [objective, setObjective] = useState("")
-  const [hasRecordingStarted, setHasRecordingStarted] = useState(false)
-  const [isPaused, setIsPaused] = useState(false)
-  const { transcript, browserSupportsSpeechRecognition } = useSpeechRecognition()
+  const { transcript, isMicrophoneAvailable, listening, resetTranscript } = useSpeechRecognition()
+  const [textInput, setTextInput] = useState<string>("")
+  const handleAudioCapture = () => {
+    if (isMicrophoneAvailable) {
+      // Se está ouvindo, para de ouvir já que usuário clicou novamente no botão
+      if (listening) {
+        SpeechRecognition.stopListening()
+        return;
+      }
+      //Reseta o transcript antes de começar a ouvir novamente
+      resetTranscript()
+      SpeechRecognition.startListening({
+        continuous: true,
+        language: "pt-BR"
+      })
 
+    }
+    else {
+      alert("Ligue o microfone para conseguir gravar audio.")
+    }
+  }
+
+  //Escuta todas as mudanças no transcript para usar no texto do input
   useEffect(() => {
-    setObjective(transcript)
+    if (transcript) {
+      setTextInput(transcript)
+    }
   }, [transcript])
-
-  const handleStartRecording = () => {
-    SpeechRecognition.startListening({ continuous: true, interimResults: true, language: "pt-BR" })
-    setHasRecordingStarted(true)
-    setIsPaused(false)
-  }
-
-  const handlePauseRecording = () => {
-    SpeechRecognition.stopListening()
-    setIsPaused(true)
-  }
-
-  const handleResumeRecording = () => {
-    SpeechRecognition.startListening({ continuous: true, interimResults: true, language: "pt-BR" })
-    setIsPaused(false)
-  }
-
-  const handleFinalizeRecording = () => {
-    SpeechRecognition.stopListening()
-    setHasRecordingStarted(false)
-    setIsPaused(false)
-  }
 
   return (
     <div className="flex h-full flex-col items-center p-6">
@@ -45,76 +46,36 @@ export default function Page() {
         <p className="text-sm text-zinc-500">Descreva seu objetivo e a gente fragmenta em passos simples pra você.</p>
 
         <div className="mt-6 flex w-full max-w-2xl flex-col gap-2">
-          <Input
-            type="text"
-            value={objective}
-            onChange={(event) => setObjective(event.target.value)}
-            placeholder="ex: preciso estudar matematica hoje, mas não sei como começar..."
-          />
+          <ButtonGroup className="[--radius:9999rem] w-full">
 
-          <div className="flex flex-wrap items-center gap-2 justify-end">
-            {!hasRecordingStarted && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleStartRecording}
-                disabled={!browserSupportsSpeechRecognition}
-              >
-                <Mic />
-                Gravar áudio
+            <ButtonGroup className="w-full">
+              <InputGroup>
+                <InputGroupInput
+                  placeholder={
+                    listening ? "Gravando seu áudio..." : "Ex: preciso estudar matematica hoje, mas não sei como começar..."
+                  }
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  disabled={listening}
+                />
+                <InputGroupAddon align="inline-end">
+                  <Tooltip>
+                    <TooltipTrigger render={<InputGroupButton onClick={handleAudioCapture} size="icon-xs" data-active={listening} className="data-[active=true]:bg-primary data-[active=true]:text-secondary dark:data-[active=true]:bg-primary dark:data-[active=true]:text-secondary" aria-pressed={listening}><AudioLinesIcon /></InputGroupButton>} />
+                    <TooltipContent>Gravar áudio</TooltipContent>
+                  </Tooltip>
+                </InputGroupAddon>
+              </InputGroup>
+            </ButtonGroup>
+            <ButtonGroup>
+              <Button aria-label="Send" size="icon" disabled={!textInput}>
+                <ArrowRightIcon />
               </Button>
-            )}
-
-            {hasRecordingStarted && !isPaused && (
-              <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handlePauseRecording}
-                  disabled={!browserSupportsSpeechRecognition}
-                >
-                  <Pause />
-                  Parar
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleFinalizeRecording}
-                  disabled={!browserSupportsSpeechRecognition}
-                >
-                  <Square />
-                  Finalizar
-                </Button>
-              </>
-            )}
-
-            {hasRecordingStarted && isPaused && (
-              <>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleResumeRecording}
-                  disabled={!browserSupportsSpeechRecognition}
-                >
-                  <Play />
-                  Continuar
-                </Button>
-
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleFinalizeRecording}
-                  disabled={!browserSupportsSpeechRecognition}
-                >
-                  <Square />
-                  Finalizar
-                </Button>
-              </>
-            )}
-          </div>
+            </ButtonGroup>
+          </ButtonGroup>
         </div>
       </main>
     </div>
   )
 }
+
+
