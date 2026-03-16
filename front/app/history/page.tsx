@@ -66,14 +66,6 @@ export default function HistoryPage() {
           <Timer />
           <h1 className="text-3xl font-bold">Sessões anteriores</h1>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            className="rounded-md border px-3 py-1 text-sm"
-            onClick={() => router.push("/calendar")}
-          >
-            Voltar ao calendário
-          </button>
-        </div>
       </div>
 
       <div className="flex flex-col gap-4">
