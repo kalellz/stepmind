@@ -1,6 +1,8 @@
 # StepMind
 
-Assistente de organização com IA para pessoas com TDAH. Converte tarefas em linguagem natural em passos simples e rotinas estruturadas. Inclui gamificação com pontos ⭐, streak 🔥 e progresso diário 🎯 para aumentar motivação e reduzir procrastinação.
+Assistente de organização com IA para pessoas com TDAH. 
+Converte tarefas em linguagem natural em passos simples e rotinas estruturadas. 
+Inclui gamificação com pontos ⭐, streak 🔥 e progresso diário 🎯 para aumentar motivação e reduzir procrastinação.
 
 ---
 
@@ -73,14 +75,6 @@ Esses pequenos estímulos ajudam o cérebro a associar produtividade com recompe
 ---
 
 ## ✅ Funcionalidades Principais
-
-### Backend
-
-- Sistema de login e cadastro
-- API de comunicação com IA
-- Processamento de áudio para texto
-- Armazenamento do histórico de chats
-- Sistema de pontuação, streak e progresso diário
 
 ### Frontend
 
