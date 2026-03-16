@@ -8,4 +8,9 @@ export const auth = betterAuth({
         enabled: true,
     },
     trustedOrigins: ["http://localhost:8080"],
+    useSecureCookies: false,
+    defaultCookieAttributes: {
+        sameSite: "none",
+        secure: false,
+    },
 });

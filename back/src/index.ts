@@ -17,8 +17,8 @@ const TaskSchema = z.object({
 });
 
 const openai = createOpenAI({
-  apiKey: process.env.OPEN_API_KEY
-})
+  apiKey: process.env.OPEN_API_KEY,
+});
 const authMiddleware = new Elysia({ name: "auth" }).derive(
   { as: "scoped" },
   async ({ request }) => {
@@ -31,12 +31,14 @@ const authMiddleware = new Elysia({ name: "auth" }).derive(
 const app = new Elysia()
   // Better Auth routes
   .all("/api/auth/*", ({ request }) => auth.handler(request))
-  .use(cors({
-    origin: true,
-    credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-  }))
+  .use(
+    cors({
+      origin: true,
+      credentials: true,
+      allowedHeaders: ["Content-Type", "Authorization"],
+      methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+    })
+  )
   // Rotas protegidas
   .use(authMiddleware)
 
@@ -44,7 +46,7 @@ const app = new Elysia()
   .post(
     "/tasks",
     async ({ body, user, set }) => {
-      const { prompt } = body;
+      const { prompt, date } = body;
 
       const { output } = await generateText({
         model: openai("gpt-4o-mini"),
@@ -62,6 +64,7 @@ const app = new Elysia()
           userId: user.id,
           title: output.title,
           prompt,
+          date: date ? new Date(date) : undefined,
           steps: {
             create: output.steps.map((s) => ({
               title: s.title,
@@ -76,7 +79,10 @@ const app = new Elysia()
       return task;
     },
     {
-      body: t.Object({ prompt: t.String({ minLength: 3 }) }),
+      body: t.Object({
+        prompt: t.String({ minLength: 3 }),
+        date: t.Optional(t.String()),
+      }),
     }
   )
 
@@ -181,11 +187,14 @@ const app = new Elysia()
   .patch(
     "/tasks/:id/steps/:stepId",
     async ({ params, body, user }) => {
-      const task = await db.task.findFirst({
-        where: { id: params.id, userId: user.id },
+      const step = await db.step.findFirst({
+        where: { id: params.stepId },
+        include: { task: true },
       });
 
-      if (!task) throw new Error("Task not found");
+      if (!step || step.task.userId !== user.id) {
+        throw new Error("Step not found");
+      }
 
       return db.step.update({
         where: { id: params.stepId },
@@ -208,6 +217,7 @@ const app = new Elysia()
     return { message: "Task deleted" };
   })
 
-  .listen(3000);
+  .listen(Number(process.env.PORT ?? 3000));
 
-console.log("🦊 API rodando em http://localhost:3000");
+const port = Number(process.env.PORT ?? 3000);
+console.log(`🦊 API rodando em http://localhost:${port}`);

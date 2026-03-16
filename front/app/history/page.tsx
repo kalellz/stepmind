@@ -2,156 +2,163 @@
 
 import { Timer, ChevronLeft, ChevronRightIcon, Check, CircleDashed } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle } from "@/components/ui/item"
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Button } from "@/components/ui/button"
 import { PageContainer } from "@/components/PageContainer"
 import { useEffect, useState } from "react"
-import axios from "axios"
-
+import { fetchHistory, HistoryResponse, toggleStepDone } from "@/lib/api"
 
 export default function HistoryPage() {
   const router = useRouter()
-  const [data, setData] = useState([])
-  const hoje = new Date(Date.now())
-  const lastSessions = [
-    {
-      id: 1,
-      title: "Estudar Matemática",
-      day: hoje.toLocaleDateString("PT-BR"),
-      steps: [{
-        title: "Tester",
-        done: false,
-        description: "Descrição da etapa acordtestear."
-      },
-      {
-        title: "asdasds",
-        done: true,
-        description: "Descrição da etapa asdads."
-      },
-      ],
-    },
-    {
-      id: 2,
-      title: "Cortar cabelo",
-      day: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toLocaleDateString("PT-BR"),
-      steps: [{
-        title: "Acordar",
-        done: true,
-        description: "Descrição da etapa acordar."
-      },
-      {
-        title: "Dormir",
-        done: true,
-        description: "Descrição da etapa dormir."
-      },
-      {
-        title: "Dormir",
-        done: true,
-        description: "Descrição da etapa dormir."
-      },
-      {
-        title: "Dormir",
-        done: true,
-        description: "Descrição da etapa dormir."
-      },
-      {
-        title: "Dormir",
-        done: true,
-        description: "Descrição da etapa dormir."
-      },
+  const [data, setData] = useState<HistoryResponse | null>(null)
+  const [isLoading, setIsLoading] = useState(false)
+  const [page, setPage] = useState(1)
 
-
-      ],
-    },
-  ] as const
-  useEffect(() => {
-    const f = async () => {
-      const res = await axios.get("http://localhost:3000/tasks/history", { withCredentials: true })
-      setData(res.data.tasks)
-
+  const loadHistory = async (pageToLoad = 1) => {
+    setIsLoading(true)
+    try {
+      const res = await fetchHistory(pageToLoad, 10)
+      setData(res.data)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false)
     }
-    f()
+  }
 
-  }, [])
+  useEffect(() => {
+    loadHistory(page)
+  }, [page])
+
+  const handleToggleStep = async (taskId: string, stepId: string, done: boolean) => {
+    try {
+      await toggleStepDone(taskId, stepId, done)
+      setData((prev) => {
+        if (!prev) return prev
+        return {
+          ...prev,
+          tasks: prev.tasks.map((task) =>
+            task.id !== taskId
+              ? task
+              : {
+                  ...task,
+                  steps: task.steps.map((step) =>
+                    step.id === stepId ? { ...step, done } : step
+                  ),
+                }
+          ),
+        }
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  const tasks = data?.tasks ?? []
+  const totalPages = data?.totalPages ?? 1
 
   return (
     <PageContainer>
-      <div className="flex items-center justify-center gap-2">
-        <Timer />
-        <h1 className="text-3xl font-bold">Sessões anteriores</h1>
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <Timer />
+          <h1 className="text-3xl font-bold">Sessões anteriores</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            className="rounded-md border px-3 py-1 text-sm"
+            onClick={() => router.push("/calendar")}
+          >
+            Voltar ao calendário
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col gap-4">
-        {data!.map((session: any) => {
-          let totalSteps = session.steps.length
-          let doneSteps = 0;
-          for (let i = 0; i < session.steps.length; i++) {
-            const obj = session.steps[i] as any
-            if (obj.done == true) {
-              doneSteps++
-            }
-          }
-          let isCompleted = totalSteps == doneSteps;
+        {tasks.length === 0 && !isLoading ? (
+          <p className="text-sm text-muted-foreground">Ainda não há sessões registradas.</p>
+        ) : null}
+
+        {tasks.map((session) => {
+          const totalSteps = session.steps.length
+          const doneSteps = session.steps.filter((step) => step.done).length
+          const isCompleted = totalSteps > 0 && totalSteps === doneSteps
+
           return (
-            <Dialog >
-              <DialogTrigger render={
-                <Item variant="outline" render={
-                  <a href="#">
+            <Dialog key={session.id}>
+              <DialogTrigger
+                render={
+                  <Item variant="outline" render={<a href="#">
                     <ItemMedia variant={"icon"}>
                       {isCompleted ? <Check /> : <CircleDashed />}
                     </ItemMedia>
                     <ItemContent>
                       <ItemTitle>{session.title}</ItemTitle>
-                      <ItemDescription>{doneSteps}/{totalSteps}</ItemDescription>
-                    </ItemContent><ItemActions>
-                      {session.day}
+                      <ItemDescription>
+                        {doneSteps}/{totalSteps}
+                      </ItemDescription>
+                    </ItemContent>
+                    <ItemActions>
+                      {new Date(session.date).toLocaleDateString("pt-BR")}
                       <ChevronRightIcon className="size-4" />
                     </ItemActions>
-                  </a>}
-                />
-              }
+                  </a>} />
+                }
               />
-              <DialogContent >
+              <DialogContent>
                 <DialogHeader>
                   <DialogTitle>{session.title}</DialogTitle>
-                  <DialogDescription>{session.day}</DialogDescription>
+                  <DialogDescription>
+                    {new Date(session.date).toLocaleDateString("pt-BR")}
+                  </DialogDescription>
                 </DialogHeader>
                 <div className="-mx-4 no-scrollbar max-h-[40vh] overflow-y-auto px-4 flex flex-col gap-3">
-                  {session.steps!.map((step: any, index: number) => {
-                    return (
-                      <Field orientation="horizontal">
-                        <Checkbox
-                          className={"cursor-pointer"}
-                          id={`checkbox-${step.title}-${index}`}
-                          name={`checkbox-${step.title}-${index}`}
-                          defaultChecked
-                        />
-                        <FieldContent>
-                          <FieldLabel htmlFor={`checkbox-${step.title}-${index}`}>
-                            {step.title}
-                          </FieldLabel>
-                          <FieldDescription>
-                            {step.description}
-                          </FieldDescription>
-                        </FieldContent>
-                      </Field>
-
-                    )
-                  })}
-
+                  {session.steps.map((step) => (
+                    <Field key={step.id} orientation="horizontal">
+                      <Checkbox
+                        className="cursor-pointer"
+                        id={`checkbox-${step.id}`}
+                        name={`checkbox-${step.id}`}
+                        checked={step.done}
+                        onCheckedChange={(value) =>
+                          handleToggleStep(session.id, step.id, Boolean(value))
+                        }
+                      />
+                      <FieldContent>
+                        <FieldLabel htmlFor={`checkbox-${step.id}`}>
+                          {step.title}
+                        </FieldLabel>
+                        <FieldDescription>{step.description}</FieldDescription>
+                      </FieldContent>
+                    </Field>
+                  ))}
                 </div>
-                <DialogFooter className="flex flex-1 max-w-full justify-end">
-                  <Button className={"w-full flex-1"}>
-                    Salvar alterações
-                  </Button>
-                </DialogFooter>
               </DialogContent>
             </Dialog>
           )
         })}
+
+        <div className="flex items-center justify-between gap-2">
+          <button
+            className="rounded-md border px-4 py-2 text-sm"
+            disabled={page <= 1}
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+          >
+            Anterior
+          </button>
+          <span className="text-sm text-muted-foreground">
+            Página {page} de {totalPages}
+          </span>
+          <button
+            className="rounded-md border px-4 py-2 text-sm"
+            disabled={page >= totalPages}
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+          >
+            Próxima
+          </button>
+        </div>
       </div>
     </PageContainer>
   )

@@ -14,6 +14,7 @@ import { authClient } from "@/lib/auth"
 type HeaderAction = {
   label: string
   icon: ReactNode
+  onClick: () => void
 }
 
 export default function Header() {
