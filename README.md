@@ -89,12 +89,35 @@ Esses pequenos estímulos ajudam o cérebro a associar produtividade com recompe
   - 🔥 Streak
   - 🎯 Progresso diário
 
+### Backend
+
+- API RESTful para gerenciar usuários, tarefas e passos
+- Integração com IA (OpenAI) para processar texto e áudio em passos estruturados
+- Autenticação e autorização usando sessões
+- Banco de dados com Prisma ORM para armazenamento de dados
+- Suporte a Docker para fácil deploy e desenvolvimento
+
 ---
 
 ## 🗂️ Estrutura do Projeto
 
 ```
 stepmind/
+├─ back/                     # API Backend em Node.js/TypeScript
+│  ├─ prisma/
+│  │  └─ schema.prisma       # Esquema do banco de dados
+│  ├─ src/
+│  │  ├─ auth.ts             # Lógica de autenticação
+│  │  ├─ db.ts               # Conexão com banco de dados
+│  │  └─ index.ts            # Ponto de entrada da API
+│  ├─ generated/             # Arquivos gerados pelo Prisma
+│  │  ├─ prisma/             # Cliente Prisma
+│  │  └─ prismabox/          # Utilitários adicionais
+│  ├─ compose.yaml           # Configuração Docker
+│  ├─ package.json
+│  ├─ prisma.config.ts
+│  ├─ tsconfig.json
+│  └─ README.md
 ├─ front/                    # Aplicação Next.js (frontend)
 │  ├─ app/
 │  │  ├─ calendar/
@@ -127,15 +150,57 @@ stepmind/
 
 ## 🛠️ Tecnologias Usadas
 
+### Frontend
 - **Next.js** (App Router)
 - **React** + **TypeScript**
 - **Tailwind CSS** (presumido no estilo global)
+
+### Backend
+- **Node.js** + **TypeScript**
+- **Prisma ORM** (para banco de dados)
+- **Docker** (para containerização)
 - **OpenAI / IA** (API de linguagem para transformar texto/voz em passos)
 - **Speech-to-Text** (para processamento de áudio)
 
 ---
 
 ## ▶️ Como Rodar Localmente
+
+### Backend
+
+1. Vá para o diretório do backend:
+
+```bash
+cd back
+```
+
+2. Instale dependências (certifique-se de ter Bun instalado):
+
+```bash
+bun install
+```
+
+3. Configure o banco de dados com Docker:
+
+```bash
+docker compose up -d
+```
+
+4. Execute as migrações do Prisma:
+
+```bash
+bunx prisma migrate dev
+```
+
+5. Rode o servidor de desenvolvimento:
+
+```bash
+bun run dev
+```
+
+O backend deve estar disponível em `http://localhost:3000` (ou porta configurada).
+
+### Frontend
 
 1. Vá para o diretório do frontend:
 
@@ -157,7 +222,7 @@ npm run dev
 
 O front-end deve estar disponível em `http://localhost:3000`.
 
-> ⚠️ Certifique-se de configurar as variáveis de ambiente necessárias (por exemplo, chaves de API de IA) antes de iniciar.
+> ⚠️ Certifique-se de configurar as variáveis de ambiente necessárias (por exemplo, chaves de API de IA, conexão com banco) antes de iniciar.
 
 ---
 
