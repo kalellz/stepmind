@@ -43,6 +43,63 @@ export default function HistoryPage() {
         done: true,
         description: "Descrição da etapa dormir."
       },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+      {
+        title: "Dormir",
+        done: true,
+        description: "Descrição da etapa dormir."
+      },
+
+
       ],
     },
   ] as const
@@ -92,10 +149,9 @@ export default function HistoryPage() {
                     <DialogTitle>{session.title}</DialogTitle>
                     <DialogDescription>{session.day}</DialogDescription>
                   </DialogHeader>
-                  <div className="-mx-4 no-scrollbar max-h-[50vh] overflow-y-auto px-4 flex flex-col gap-3">
+                  <div className="-mx-4 no-scrollbar max-h-[40vh] overflow-y-auto px-4 flex flex-col gap-3">
                     {session.steps.map((step, index) => {
                       return (
-
                         <Field orientation="horizontal">
                           <Checkbox
                             className={"cursor-pointer"}
@@ -115,13 +171,13 @@ export default function HistoryPage() {
 
                       )
                     })}
-                    <DialogFooter className="flex flex-1 max-w-full justify-end">
 
-                      <Button className={"w-full flex-1"}>
-                        Salvar alterações
-                      </Button>
-                    </DialogFooter>
                   </div>
+                  <DialogFooter className="flex flex-1 max-w-full justify-end">
+                    <Button className={"w-full flex-1"}>
+                      Salvar alterações
+                    </Button>
+                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             )
