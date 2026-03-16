@@ -1,14 +1,13 @@
 "use client"
 
-import { ArrowRightIcon, AudioLinesIcon, Mic, Pause, Play, PlusIcon, Square } from "lucide-react"
+import { ArrowRightIcon, AudioLinesIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition"
-import { Input } from "../components/ui/input"
 import { ButtonGroup } from "@/components/ui/button-group"
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group"
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { Button } from "@/components/ui/button"
-
+import axios from "axios"
 export default function Page() {
   const { transcript, isMicrophoneAvailable, listening, resetTranscript } = useSpeechRecognition()
   const [textInput, setTextInput] = useState<string>("")
@@ -39,6 +38,13 @@ export default function Page() {
     }
   }, [transcript])
 
+  async function handleSubmit() {
+
+    const res = await axios.post("http://localhost:3000/tasks", {
+      prompt: textInput
+    }, { withCredentials: true })
+  }
+
   return (
     <div className="flex h-full flex-col items-center p-6">
       <main className="flex h-full w-full flex-col items-center justify-center">
@@ -67,7 +73,7 @@ export default function Page() {
               </InputGroup>
             </ButtonGroup>
             <ButtonGroup>
-              <Button aria-label="Send" size="icon" disabled={!textInput}>
+              <Button aria-label="Send" size="icon" disabled={!textInput} onClick={handleSubmit}>
                 <ArrowRightIcon />
               </Button>
             </ButtonGroup>

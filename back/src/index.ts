@@ -4,7 +4,7 @@ import { generateText, Output } from "ai";
 import { z } from "zod";
 import { auth } from "./auth";
 import { db } from "./db";
-
+import { cors } from "@elysiajs/cors"
 const TaskSchema = z.object({
   title: z.string(),
   steps: z.array(
@@ -31,7 +31,12 @@ const authMiddleware = new Elysia({ name: "auth" }).derive(
 const app = new Elysia()
   // Better Auth routes
   .all("/api/auth/*", ({ request }) => auth.handler(request))
-
+  .use(cors({
+    origin: true,
+    credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+  }))
   // Rotas protegidas
   .use(authMiddleware)
 
