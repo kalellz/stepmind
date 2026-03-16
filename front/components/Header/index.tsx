@@ -14,7 +14,6 @@ import { authClient } from "@/lib/auth"
 type HeaderAction = {
   label: string
   icon: ReactNode
-  onClick?: () => void
 }
 
 export default function Header() {
@@ -38,8 +37,8 @@ export default function Header() {
   }
   const actions: HeaderAction[] = auth
     ? [
-      { label: "Calendário", icon: <Calendar /> },
-      { label: "Histórico", icon: <History /> },
+      { label: "Calendário", icon: <Calendar />, onClick: () => router.push("/calendar") },
+      { label: "Histórico", icon: <History />, onClick: () => router.push("/history") },
       themeAction,
       {
         label: "Sair", icon: <LogOut />, onClick: handleSignOut
@@ -49,7 +48,7 @@ export default function Header() {
 
   return (
     <header className="flex w-full items-center justify-between border-b px-6 py-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 cursor-pointer hover:opacity-80" onClick={() => router.push("/")}>
         <Sparkles />
         <span className="text-sm font-semibold">StepMind</span>
       </div>
