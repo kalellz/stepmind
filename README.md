@@ -11,7 +11,7 @@ Inclui gamificação com pontos ⭐, streak 🔥 e progresso diário 🎯 para a
 - [O que é](#o-que-é)
 - [Como funciona](#como-funciona)
 - [Funcionalidades Principais](#funcionalidades-principais)
-- [Motivação / Sistema de Dopamina](#motivação--sistema-de-dopamina)
+- [Motivação / Sistema de Dopamina](#motivação-sistema-de-dopamina)
 - [Estrutura do Projeto](#estrutura-do-projeto)
 - [Tecnologias Usadas](#tecnologias-usadas)
 - [Como Rodar Localmente](#como-rodar-localmente)
