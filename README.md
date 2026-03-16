@@ -220,7 +220,7 @@ npm install
 npm run dev
 ```
 
-O front-end deve estar disponível em `http://localhost:3000`.
+O front-end deve estar disponível em `http://localhost:8080`.
 
 > ⚠️ Certifique-se de configurar as variáveis de ambiente necessárias (por exemplo, chaves de API de IA, conexão com banco) antes de iniciar.
 
