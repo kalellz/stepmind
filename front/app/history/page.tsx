@@ -7,6 +7,7 @@ import { Item, ItemActions, ItemContent, ItemDescription, ItemMedia, ItemTitle }
 import { Field, FieldContent, FieldDescription, FieldLabel } from "@/components/ui/field"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
+import { PageContainer } from "@/components/PageContainer"
 
 
 export default function HistoryPage() {
@@ -105,11 +106,7 @@ export default function HistoryPage() {
   ] as const
 
   return (
-    <div className="flex h-full justify-center">
-      <div className="flex flex-col gap-4 min-w-xl">
-        <button type="button" onClick={() => router.back()} className="flex cursor-pointer gap-2">
-          <ChevronLeft /> <p>Voltar</p>
-        </button>
+    <PageContainer>
         <div className="flex items-center justify-center gap-2">
           <Timer />
           <h1 className="text-3xl font-bold">Sessões anteriores</h1>
@@ -183,7 +180,6 @@ export default function HistoryPage() {
             )
           })}
         </div>
-      </div>
-    </div>
+      </PageContainer>
   )
 }
